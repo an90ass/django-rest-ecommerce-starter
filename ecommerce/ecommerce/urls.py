@@ -8,7 +8,7 @@ from drf_spectacular.views import (
     SpectacularSwaggerView,
 )
 
-api_prefix = 'api/v1/'
+api_prefix = 'v1/'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
