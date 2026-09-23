@@ -14,16 +14,19 @@ from .serializers import (
 )
 
 
+from rest_framework.throttling import ScopedRateThrottle
+
 class RegisterView(generics.CreateAPIView):
     permission_classes = [AllowAny]
     serializer_class = UserRegisterSerializer
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = 'auth'
 
     @extend_schema(
         tags=['Authentication'],
         summary="Register a new user",
         description="Creates a new user account (Customer, Seller, or Admin) and returns user profile.",
         responses={201: UserSerializer},
-        
     )
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -39,6 +42,8 @@ class RegisterView(generics.CreateAPIView):
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = 'auth'
 
     @extend_schema(
         summary="User Login (JWT Token)",
