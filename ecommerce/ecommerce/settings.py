@@ -150,6 +150,13 @@ SPECTACULAR_SETTINGS = {
     'DESCRIPTION': 'Production-ready Django REST Framework E-Commerce API Starter',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
+    'SCHEMA_PATH_PREFIX': r'/api/v[0-9]+',
+    'SWAGGER_UI_SETTINGS': {
+        'deepLinking': True,
+        'persistAuthorization': True,
+        'displayOperationId': False,
+        'filter': True,
+    },
 }
 
 CORS_ALLOW_ALL_ORIGINS = True

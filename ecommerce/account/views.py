@@ -1,8 +1,9 @@
 from rest_framework import status, generics
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.throttling import ScopedRateThrottle
 from rest_framework_simplejwt.views import TokenObtainPairView
-from drf_spectacular.utils import extend_schema, OpenApiResponse
+from drf_spectacular.utils import extend_schema
 
 from utils.responses import api_response
 from .serializers import (
@@ -14,8 +15,6 @@ from .serializers import (
 )
 
 
-from rest_framework.throttling import ScopedRateThrottle
-
 class RegisterView(generics.CreateAPIView):
     permission_classes = [AllowAny]
     serializer_class = UserRegisterSerializer
@@ -26,7 +25,7 @@ class RegisterView(generics.CreateAPIView):
         tags=['Authentication'],
         summary="Register a new user",
         description="Creates a new user account (Customer, Seller, or Admin) and returns user profile.",
-        responses={201: UserSerializer},
+        responses={201: UserSerializer}
     )
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -46,6 +45,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
     throttle_scope = 'auth'
 
     @extend_schema(
+        tags=['Authentication'],
         summary="User Login (JWT Token)",
         description="Authenticate user with email & password and return JWT access/refresh tokens alongside user metadata."
     )
@@ -65,6 +65,7 @@ class UserProfileView(APIView):
     permission_classes = [IsAuthenticated]
 
     @extend_schema(
+        tags=['Authentication'],
         summary="Get current user profile",
         responses={200: UserSerializer}
     )
@@ -77,6 +78,7 @@ class UserProfileView(APIView):
         )
 
     @extend_schema(
+        tags=['Authentication'],
         summary="Update current user profile",
         request=UserUpdateSerializer,
         responses={200: UserSerializer}
@@ -96,6 +98,7 @@ class ChangePasswordView(APIView):
     permission_classes = [IsAuthenticated]
 
     @extend_schema(
+        tags=['Authentication'],
         summary="Change user password",
         request=ChangePasswordSerializer
     )

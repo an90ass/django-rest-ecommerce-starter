@@ -32,7 +32,7 @@ def _get_or_create_cart(request):
 class CartView(APIView):
     permission_classes = [AllowAny]
 
-    @extend_schema(summary="Get current shopping cart", responses={200: CartSerializer})
+    @extend_schema(tags=['Cart'], summary="Get current shopping cart", responses={200: CartSerializer})
     def get(self, request):
         cart = _get_or_create_cart(request)
         serializer = CartSerializer(cart)
@@ -42,7 +42,7 @@ class CartView(APIView):
             data=serializer.data
         )
 
-    @extend_schema(summary="Add item to shopping cart", request=AddCartItemSerializer, responses={200: CartSerializer})
+    @extend_schema(tags=['Cart'], summary="Add item to shopping cart", request=AddCartItemSerializer, responses={200: CartSerializer})
     def post(self, request):
         serializer = AddCartItemSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -84,7 +84,7 @@ class CartView(APIView):
             data=CartSerializer(cart).data
         )
 
-    @extend_schema(summary="Clear shopping cart")
+    @extend_schema(tags=['Cart'], summary="Clear shopping cart")
     def delete(self, request):
         cart = _get_or_create_cart(request)
         cart.items.all().delete()
@@ -98,7 +98,7 @@ class CartView(APIView):
 class CartItemDetailView(APIView):
     permission_classes = [AllowAny]
 
-    @extend_schema(summary="Update cart item quantity", request=UpdateCartItemSerializer)
+    @extend_schema(tags=['Cart'], summary="Update cart item quantity", request=UpdateCartItemSerializer)
     def patch(self, request, pk):
         cart = _get_or_create_cart(request)
         cart_item = get_object_or_404(CartItem, id=pk, cart=cart)
@@ -123,7 +123,7 @@ class CartItemDetailView(APIView):
             data=CartSerializer(cart).data
         )
 
-    @extend_schema(summary="Remove item from cart")
+    @extend_schema(tags=['Cart'], summary="Remove item from cart")
     def delete(self, request, pk):
         cart = _get_or_create_cart(request)
         cart_item = get_object_or_404(CartItem, id=pk, cart=cart)
@@ -138,7 +138,7 @@ class CartItemDetailView(APIView):
 class WishlistView(APIView):
     permission_classes = [IsAuthenticated]
 
-    @extend_schema(summary="Get user wishlist", responses={200: WishlistSerializer})
+    @extend_schema(tags=['Wishlist'], summary="Get user wishlist", responses={200: WishlistSerializer})
     def get(self, request):
         wishlist, _ = Wishlist.objects.get_or_create(user=request.user)
         return api_response(
@@ -151,7 +151,7 @@ class WishlistView(APIView):
 class WishlistToggleView(APIView):
     permission_classes = [IsAuthenticated]
 
-    @extend_schema(summary="Toggle item in user wishlist")
+    @extend_schema(tags=['Wishlist'], summary="Toggle item in user wishlist")
     def post(self, request):
         product_id = request.data.get('product_id')
         if not product_id:

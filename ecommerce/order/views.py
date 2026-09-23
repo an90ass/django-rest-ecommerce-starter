@@ -17,11 +17,12 @@ from .services import CheckoutService
 
 
 @extend_schema_view(
-    list=extend_schema(summary="List user addresses"),
-    create=extend_schema(summary="Add new user address"),
-    retrieve=extend_schema(summary="Get address details"),
-    update=extend_schema(summary="Update address"),
-    destroy=extend_schema(summary="Delete address")
+    list=extend_schema(tags=['Addresses'], summary="List user addresses"),
+    create=extend_schema(tags=['Addresses'], summary="Add new user address"),
+    retrieve=extend_schema(tags=['Addresses'], summary="Get address details"),
+    update=extend_schema(tags=['Addresses'], summary="Update address"),
+    partial_update=extend_schema(tags=['Addresses'], summary="Partial update address"),
+    destroy=extend_schema(tags=['Addresses'], summary="Delete address")
 )
 class AddressViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
@@ -37,7 +38,7 @@ class AddressViewSet(viewsets.ModelViewSet):
 class CheckoutView(APIView):
     permission_classes = [IsAuthenticated]
 
-    @extend_schema(summary="Execute Checkout", request=CheckoutSerializer, responses={201: OrderSerializer})
+    @extend_schema(tags=['Checkout'], summary="Execute Checkout", request=CheckoutSerializer, responses={201: OrderSerializer})
     def post(self, request):
         serializer = CheckoutSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -60,8 +61,8 @@ class CheckoutView(APIView):
 
 
 @extend_schema_view(
-    list=extend_schema(summary="List orders (Customer sees own, Admin sees all)"),
-    retrieve=extend_schema(summary="Get order details")
+    list=extend_schema(tags=['Orders'], summary="List orders (Customer sees own, Admin sees all)"),
+    retrieve=extend_schema(tags=['Orders'], summary="Get order details")
 )
 class OrderViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [IsAuthenticated]
@@ -73,7 +74,7 @@ class OrderViewSet(viewsets.ReadOnlyModelViewSet):
             return Order.objects.all().select_related('user').prefetch_related('items')
         return Order.objects.filter(user=user).prefetch_related('items')
 
-    @extend_schema(summary="Cancel an existing order")
+    @extend_schema(tags=['Orders'], summary="Cancel an existing order")
     @action(detail=True, methods=['post'])
     def cancel(self, request, pk=None):
         order = self.get_object()
@@ -107,7 +108,7 @@ class OrderViewSet(viewsets.ReadOnlyModelViewSet):
             data=OrderSerializer(order).data
         )
 
-    @extend_schema(summary="Update order status (Admin only)", request=OrderStatusUpdateSerializer)
+    @extend_schema(tags=['Orders'], summary="Update order status (Admin only)", request=OrderStatusUpdateSerializer)
     @action(detail=True, methods=['patch'], permission_classes=[IsAdminUser])
     def update_status(self, request, pk=None):
         order = self.get_object()
