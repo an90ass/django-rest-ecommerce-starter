@@ -32,14 +32,15 @@ load_dotenv(dotenv_path)
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.environ.get("DEBUG", "True") == "True"
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0', '*']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -157,6 +158,34 @@ SPECTACULAR_SETTINGS = {
         'displayOperationId': False,
         'filter': True,
     },
+}
+
+JAZZMIN_SETTINGS = {
+    "site_title": "Enterprise E-Commerce Admin",
+    "site_header": "E-Commerce System",
+    "site_brand": "E-Commerce Admin",
+    "welcome_sign": "Welcome to Enterprise E-Commerce Admin Dashboard",
+    "copyright": "Enterprise E-Commerce Starter",
+    "search_model": ["account.CustomUser", "product.Product", "order.Order"],
+    "topmenu_links": [
+        {"name": "Home", "url": "admin:index", "permissions": ["auth.view_user"]},
+        {"name": "Swagger API Docs", "url": "/api/docs/", "new_window": True},
+    ],
+    "show_sidebar": True,
+    "navigation_expanded": True,
+    "icons": {
+        "account.CustomUser": "fas fa-users",
+        "product.Category": "fas fa-list",
+        "product.Product": "fas fa-box",
+        "product.Review": "fas fa-star",
+        "cart.Cart": "fas fa-shopping-cart",
+        "cart.Wishlist": "fas fa-heart",
+        "order.Address": "fas fa-map-marker-alt",
+        "order.Order": "fas fa-receipt",
+    },
+    "default_icon_parents": "fas fa-chevron-circle-right",
+    "default_icon_children": "fas fa-circle",
+    "changeform_format": "horizontal_tabs",
 }
 
 CORS_ALLOW_ALL_ORIGINS = True
