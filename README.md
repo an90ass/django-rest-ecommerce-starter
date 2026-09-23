@@ -20,7 +20,7 @@ graph TD
         Router --> OrderModule[Atomic Checkout & Orders]
     end
     
-    OrderModule -->|@transaction.atomic| Checkout[Checkout Service]
+    OrderModule -->|"Atomic Transaction"| Checkout[Checkout Service]
     Checkout -->|Stock Check & Deduction| Stock[Product Inventory]
     Checkout -->|Payment Gateway Abstraction| Payment[Payment Service]
     
