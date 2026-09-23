@@ -21,6 +21,7 @@ urlpatterns = [
     # API Routes
     path(api_prefix, include('account.urls')),
     path(api_prefix, include('product.urls')),
+    path(api_prefix, include('cart.urls')),
 ]
 
 if settings.DEBUG:

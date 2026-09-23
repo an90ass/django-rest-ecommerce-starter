@@ -51,8 +51,10 @@ INSTALLED_APPS = [
     'django_filters',
     'corsheaders',
     'drf_spectacular',
+    # Local apps
     'account',
     'product',
+    'cart',
 ]
 
 AUTH_USER_MODEL = 'account.CustomUser'
